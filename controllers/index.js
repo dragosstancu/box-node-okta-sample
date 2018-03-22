@@ -3,19 +3,19 @@
  */
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn('/');
 
-const User = require('../models/users');
+const oidc = require('../service/okta/oktaMiddleware');
+const BoxSdk = require('../service/box/boxSdk')
+const BoxConfig = require('config').boxAppSettings
 
 // load routes
-router.use('/profile', ensureLoggedIn, require('./profile'))
+router.use('/profile', oidc.ensureAuthenticated(), require('./profile'))
 
 /**
  * base route
  */
 router.get('/', function(req, res) {
-  if (req.user) {
+  if (req.userinfo) {
     res.redirect('/profile');
   } else {
     res.render('pages/home');
@@ -23,25 +23,23 @@ router.get('/', function(req, res) {
 });
 
 /**
- * log in
+ * callback from okta
  */
-router.post('/login', passport.authenticate('local', { failureRedirect: '/' }), function(req, res) {
-  res.redirect('/');
-});
+router.get('/callback', async function(req, res) {
+  let externalId = req.userinfo.sub;
+  let serviceAccountClient = BoxSdk.getAppAuthClient('enterprise', BoxConfig.enterpriseID);
+  let appUser = await serviceAccountClient.users.get("", {external_app_user_id: externalId})
 
-/**
- * sign up, create new user
- */
-router.post('/signup', async function(req, res) {
-  let userInfo = req.body;
+  // does app user already exist? if not, create one
+  if(appUser.total_count > 0) {
+    boxAppUserId = appUser.entries[0].id
+  } else {
+    let newAppUser = await serviceAccountClient.enterprise.addAppUser(req.userinfo.email, {external_app_user_id: externalId});
+    boxAppUserId = newAppUser.id
+  }
+  req.userinfo.boxId = boxAppUserId
 
-  // create new box app user and db user
-  await User.newUser(userInfo);
-  console.log("Successfully created new user");
-
-  passport.authenticate('local') (req, res, function() {
-    res.redirect('/profile');
-  });
+  res.redirect('/profile')
 });
 
 /**

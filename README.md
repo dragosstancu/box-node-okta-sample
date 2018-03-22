@@ -9,8 +9,8 @@ Follow the steps below to get the app running on your local machine.
 
 First, clone the repository and install dependencies.
 ```bash
-$ git clone https://github.com/mattmitchell6/box-node-passport-sample.git
-$ cd box-node-passport-sample
+$ git clone https://github.com/mattmitchell6/box-node-okta-sample.git
+$ cd box-node-okta-sample
 $ npm install
 ```
 

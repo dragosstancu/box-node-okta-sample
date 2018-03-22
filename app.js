@@ -1,13 +1,10 @@
 const express = require('express');
-const passport = require('passport');
-const mongoose = require('mongoose');
 const path = require('path');
 const exphbs = require('express-handlebars')
 const hbs = require('hbs')
 require('express-async-errors');
 
-const strategy = require('./service/passport-local/passportStrategy.js');
-const MongooseConfig = require('config').mongooseConfig;
+const oidc = require('./service/okta/oktaMiddleware');
 
 // Create a new Express application.
 var app = express();
@@ -28,12 +25,8 @@ app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Initialize Passport and restore authentication state, if any, from the session.
-app.use(passport.initialize());
-app.use(passport.session());
-
-// mongoose connect
-mongoose.connect(MongooseConfig.databaseUrl);
+// okta oidc middleware
+app.use(oidc.router);
 
 // load controllers & routes
 app.use(require('./controllers'));

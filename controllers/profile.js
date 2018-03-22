@@ -13,15 +13,15 @@ const BoxSdk = require('../service/box/boxSdk');
  * Fetch app user token + info
  */
 router.get('/', async function (req, res) {
-  let boxUserId = req.user.boxId
+  let boxUserId = req.userinfo.boxId
   let appUserClient = BoxSdk.getAppAuthClient('user', boxUserId);
 
   // get app user access token and user info
-  let tokens = await BoxSdk.getAppUserTokens(req.user.boxId);
-  req.user.boxAccessToken = tokens.accessToken
-  let appUserInfo = await appUserClient.users.get(boxUserId, {fields: "name,login,created_at"});
+  let tokens = await BoxSdk.getAppUserTokens(req.userinfo.boxId);
+  req.userinfo.boxAccessToken = tokens.accessToken
+  let appUserInfo = await appUserClient.users.get(boxUserId, {fields: "external_app_user_id,name,login,created_at"});
 
-  res.render('pages/profile', { user: req.user, appUser: appUserInfo});
+  res.render('pages/profile', { user: req.userinfo, appUser: appUserInfo});
 });
 
 /**
@@ -29,7 +29,7 @@ router.get('/', async function (req, res) {
  */
 router.post('/create-folder', async function (req, res) {
   let folderName = req.body.folderName;
-  let appUserClient = BoxSdk.getAppAuthClient('user', req.user.boxId);
+  let appUserClient = BoxSdk.getAppAuthClient('user', req.userinfo.boxId);
 
   // create folder
   try {
@@ -45,7 +45,7 @@ router.post('/create-folder', async function (req, res) {
  * Post to upload file
  */
 router.post('/upload', upload.single('file'), async function (req, res) {
-  let appUserClient = BoxSdk.getAppAuthClient('user', req.user.boxId);
+  let appUserClient = BoxSdk.getAppAuthClient('user', req.userinfo.boxId);
   let fileStream = fs.createReadStream(req.file.path);
 
   // upload file, catch upload error (mainly for duplicate files)
