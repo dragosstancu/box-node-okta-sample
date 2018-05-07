@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars')
 const hbs = require('hbs')
+const handlebarsHelpers = require('./helpers/handlebars');
 require('dotenv').config();
 require('express-async-errors');
 
@@ -13,7 +14,8 @@ var app = express();
 // view engine setup (Handlebars)
 app.set('view engine', 'hbs');
 app.engine('hbs', exphbs({
-	extname: '.hbs'
+	extname: '.hbs',
+	helpers: handlebarsHelpers
 }));
 app.set('views', path.join(__dirname, 'views'));
 

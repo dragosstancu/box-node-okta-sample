@@ -7,10 +7,6 @@ const path = require('path');
 const BoxSdk = require('box-node-sdk');
 const BoxConfig = require('config').boxAppSettings;
 
-console.log("testing private key");
-console.log(process.env.ENVIRONMENT);
-console.log(process.env.PRIVATE_KEY);
-
 // Set up the Box SDK
 module.exports = new BoxSdk({
 	clientID: BoxConfig.clientID,

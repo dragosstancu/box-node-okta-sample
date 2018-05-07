@@ -18,10 +18,21 @@ router.get('/', async function (req, res) {
 
   // get app user access token and user info
   let tokens = await BoxSdk.getAppUserTokens(req.userinfo.boxId);
+  let appUserInfo = await appUserClient.users.get(boxUserId, {fields: "name,login,created_at"});
   req.userinfo.boxAccessToken = tokens.accessToken
-  let appUserInfo = await appUserClient.users.get(boxUserId, {fields: "external_app_user_id,name,login,created_at"});
 
-  res.render('pages/profile', { user: req.userinfo, appUser: appUserInfo});
+  // get folder items
+  let folderItems = await appUserClient.folders.getItems('0',
+    {
+      fields: "name,type,modified_at"
+    });
+  folderItems = folderItems.entries
+
+  res.render('pages/profile', {
+    user: req.userinfo,
+    appUser: appUserInfo,
+    items: folderItems
+  });
 });
 
 /**
@@ -61,4 +72,42 @@ router.post('/upload', upload.single('file'), async function (req, res) {
   res.redirect('/');
 });
 
+/**
+ * Fetch file thumbnail
+ */
+router.get('/thumbnail/:id', async function(req, res) {
+  let appUserClient = BoxSdk.getAppAuthClient('user', req.userinfo.boxId);
+  let data = await appUserClient.files.getThumbnail(req.params.id)
+
+  if (data.file) {
+    // We got the thumbnail file, so send the image bytes back
+    res.send(data.file);
+  } else if (data.location) {
+    // We got a placeholder URL, so redirect the user there
+    res.redirect(data.location);
+  } else {
+    // Something went wrong, so return a 500
+    res.status(500).end();
+  }
+})
+
+/**
+ * Download file
+ */
+router.get('/download/:id', async function(req, res) {
+  let appUserClient = BoxSdk.getAppAuthClient('user', req.userinfo.boxId);
+  let downloadUrl = await appUserClient.files.getDownloadURL(req.params.id);
+
+  res.redirect(downloadUrl)
+})
+
+/**
+ * Get file preview link
+ */
+router.get('/preview/:id', async function(req, res) {
+  let appUserClient = BoxSdk.getAppAuthClient('user', req.userinfo.boxId);
+  let previewUrl = await appUserClient.files.getEmbedLink(req.params.id);
+
+  res.redirect(previewUrl)
+})
 module.exports = router;
