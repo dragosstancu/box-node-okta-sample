@@ -3,14 +3,14 @@
 {{#*inline "content-block"}}
 
 <div class="container">
-	<h2 class="text-center mtm">Welcome, {{user.username}}</h2>
+	<h2 class="text-center mtm">Welcome, {{user.email}}</h2>
 	<hr>
 	<div class="row">
 		<div class="col col-md-6 col-lg-4 mtm">
 			<h4>User Information</h4>
 			{{#if appUser}}
 				<p>
-					username: {{user.username}}<br/>
+					username: {{user.email}}<br/>
 					box app user id: {{user.boxId}}<br/>
 					created_at: {{appUser.created_at}}<br/>
 				</p>
