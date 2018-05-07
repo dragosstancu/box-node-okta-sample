@@ -12,6 +12,6 @@ module.exports = {
     orgUrl: "dev-287481.oktapreview",
     clientID: "0oaeduz62aaOhiIRE0h7",
     clientSecret: "JjeLLWy550WC_XsCQTL0AL-Fx_miN47HfpcVnuTX",
-    redirectUri: "http://box-okta-sample.herokuapp.com/authorization-code/callback"
+    redirectUri: "https://box-okta-sample.herokuapp.com/authorization-code/callback"
   }
 }
