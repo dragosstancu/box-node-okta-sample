@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars')
 const hbs = require('hbs')
+require('dotenv').config();
 require('express-async-errors');
 
 const oidc = require('./service/okta/oktaMiddleware');

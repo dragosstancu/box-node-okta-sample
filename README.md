@@ -1,5 +1,5 @@
 ## Prerequisites
-[Mongodb](https://treehouse.github.io/installation-guides/mac/mongo-mac.html) - for storing user objects (username, password, Box app user id)
+[Okta](https://developer.okta.com/) authenticate/manage user identities
 
 [Node.js (v9)](https://nodejs.org/en/)
 
@@ -18,11 +18,8 @@ Create a new [Box application](https://developer.box.com/docs/configuring-servic
 
 Add the domain, http://localhost:3000 to the list of "Allowed Origins" in the Box Developer Console.
 
-Make sure mongoDB is running in a separate terminal tab. This local database is used to store the user objects (including the created box app user id).
-
-```bash
-$ mongod
-```
+#### Okta Configuration
+...figure it out
 
 Start the server.
 

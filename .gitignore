@@ -1,5 +1,6 @@
 # Mac OS X
 .DS_Store
+.env
 
 # Node.js
 node_modules/
@@ -7,5 +8,6 @@ npm-debug.log
 
 #config
 config/local.js
+jwt/private_key.pem
 
 package-lock.json
