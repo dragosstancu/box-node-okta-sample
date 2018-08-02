@@ -13,6 +13,6 @@ module.exports = {
     orgUrl: "",
     clientID: "",
     clientSecret: "",
-    redirectUri: ""
+    redirectUri: "http://localhost:3000/authorization-code/callback"
   }
 }

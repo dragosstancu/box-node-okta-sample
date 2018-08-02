@@ -19,7 +19,8 @@ Create a new [Box application](https://developer.box.com/docs/configuring-servic
 Add the domain, http://localhost:3000 to the list of "Allowed Origins" in the Box Developer Console.
 
 #### Okta Configuration
-...figure it out :)
+Populate your local.js config file with your Okta orgUrl, clientID, and clientSecret.
+
 
 Start the server.
 
