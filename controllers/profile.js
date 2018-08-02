@@ -18,7 +18,8 @@ router.get('/', async function (req, res) {
 
   // get app user access token and user info
   let tokens = await BoxSdk.getAppUserTokens(req.userinfo.boxId);
-  let appUserInfo = await appUserClient.users.get(boxUserId, {fields: "name,login,created_at"});
+  let appUserInfo = await appUserClient.users.get(boxUserId, {fields: "name,login,created_at,external_app_user_id"});
+  console.log(appUserInfo);
   req.userinfo.boxAccessToken = tokens.accessToken
 
   // get folder items
